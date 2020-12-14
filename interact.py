@@ -35,13 +35,13 @@ import tflex
 
 
 # String, which MODEL to use
-MODEL_NAME = "774M"
+MODEL_NAME = "1558M"
 
 # Integer seed for random number generators, fix seed to reproduce results
 SEED = None
 
 # Number of samples to return total
-NSAMPLES = 1
+NSAMPLES = 5
 
 # Number of batches (only affects speed/memory, must divide nsamples)
 BATCH_SIZE = 1
@@ -54,7 +54,7 @@ LENGTH = None
 # TEMPERATURE results in less random completions. As the TEMPERATURE
 # approaches zero, the MODEL will become deterministic and repetitive.
 # Higher TEMPERATURE results in more random completions.
-TEMPERATURE = 1
+TEMPERATURE = 0.7
 
 # Integer value controlling diversity. 1 means only 1 word is considered
 # for each step (token), resulting in deterministic completions, while 40
@@ -67,7 +67,7 @@ TOP_K = 40
 MODELS_DIR = "models"
 
 # Path to the saved MODEL info
-CHECKPOINT = "models/model-2500.hdf5"
+CHECKPOINT = "gpt-2/checkpoint/run1/model-7728.hdf5"
 
 
 def main():
