@@ -67,7 +67,7 @@ TOP_K = 40
 MODELS_DIR = "models"
 
 # Path to the saved MODEL info
-CHECKPOINT = "gpt-2/checkpoint/run1/model-7728.hdf5"
+CHECKPOINT = "checkpoint/run1/model-7728.hdf5"
 
 
 def main():
@@ -139,13 +139,14 @@ def main():
                     " ".join(cleaner.clean_text(answers))
                 )
 
-                final_answers = cleaner.chunk_into_sentences(clean_answers)
+                #final_answers = cleaner.chunk_into_sentences(clean_answers)
 
                 try:
-                    print(similarity.use_filter(question, final_answers, 5))
+                    #print(similarity.use_filter(question, answers, 5))
+                    print(answers)
 
                 except Exception:
-                    print(" ".join(final_answers))
+                    print(" ".join(answers))
                     print("WARNING: Model cannot generate an answer using USE")
 
             print()
