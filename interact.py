@@ -129,7 +129,7 @@ def main():
 
             for _ in range(NSAMPLES // BATCH_SIZE):
                 while False in truncated:
-                    num_tokens = 1023 - (len(context_tokens[0]))
+                    num_tokens = 1023 - (len(context_tokens))
 
                     if generated_once:
                         new_split_output_length = min(length - total_tokens, 1023 - split_length)
@@ -150,7 +150,7 @@ def main():
                         out = sess.run(output, feed_dict={
                             context: context_tokens
                         })
-                        
+
                 answers = ""
                 for idx in range(BATCH_SIZE):
                     answers += enc.decode(out[idx])
