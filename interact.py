@@ -193,7 +193,7 @@ def main():
                             gen_text[i] = np.concatenate((gen_text[i], text), axis=None)
                             if trunc_text or (length is not None and total_tokens >= length-1):
                                 truncated[i] = True
-                                gen += enc.decode(gen_text[i]).lstrip('\n')
+                                gen = enc.decode(gen_text[i]).lstrip('\n')
                                 '''
                                 if destination_path:
                                     f.write("{}\n{}".format(gen, sample_delim))
