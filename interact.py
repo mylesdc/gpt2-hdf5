@@ -134,6 +134,7 @@ def main():
             gen_texts = []
             answers = ""
             split_length = int(1023 * SPLIT_CONTEXT)
+            split_output_length = min(length, 1023 - split_length)
 
             for _ in range(NSAMPLES // BATCH_SIZE):
                 gen_text = [np.array([])] * BATCH_SIZE
