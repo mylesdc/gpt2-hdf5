@@ -123,15 +123,34 @@ def main():
 
             context_tokens = enc.encode(question)
 
-            for _ in range(NSAMPLES // BATCH_SIZE):
-                out = sess.run(
-                    output,
-                    feed_dict={
-                        context: [context_tokens for _ in range(BATCH_SIZE)]
-                    },
-                )[:, len(context_tokens) :]
+            # custom for full length text
+            total_tokens = len(context_tokens[0])
+            generated_once = False
 
-                # Build the answers string
+            for _ in range(NSAMPLES // BATCH_SIZE):
+                while False in truncated:
+                    num_tokens = 1023 - (len(context_tokens[0]))
+
+                    if generated_once:
+                        new_split_output_length = min(length - total_tokens, 1023 - split_length)
+                        if new_split_output_length != split_output_length:
+                            split_output = sample.sample_sequence(
+                                hparams=hparams,
+                                length=new_split_output_length,
+                                start_token=enc.encoder['<|endoftext|>'] if not prefix else None,
+                                context=context if prefix else None,
+                                batch_size=batch_size,
+                                temperature=temperature, top_k=top_k, top_p=top_p
+                            )[:, 1:]
+                        out = sess.run(split_output, feed_dict={
+                            context: context_tokens
+                        })
+
+                    else:
+                        out = sess.run(output, feed_dict={
+                            context: context_tokens
+                        })
+                        
                 answers = ""
                 for idx in range(BATCH_SIZE):
                     answers += enc.decode(out[idx])
@@ -150,6 +169,35 @@ def main():
                 except Exception:
                     print(" ".join(answers))
                     print("WARNING: Model cannot generate an answer using USE")
+                    '''
+                    for _ in range(NSAMPLES // BATCH_SIZE):
+                        out = sess.run(
+                            output,
+                            feed_dict={
+                                context: [context_tokens for _ in range(BATCH_SIZE)]
+                            },
+                        )[:, len(context_tokens) :]
+
+                        # Build the answers string
+                        answers = ""
+                        for idx in range(BATCH_SIZE):
+                            answers += enc.decode(out[idx])
+
+                        # Process the string (cleanup)
+                        clean_answers = cleaner.clean_additional(
+                            " ".join(cleaner.clean_text(answers))
+                        )
+
+                        final_answers = cleaner.chunk_into_sentences(clean_answers)
+
+                        try:
+                            #print(similarity.use_filter(question, answers, 5))
+                            print(answers)
+
+                        except Exception:
+                            print(" ".join(answers))
+                            print("WARNING: Model cannot generate an answer using USE")
+                    '''
 
             print()
             print("=" * 79)
