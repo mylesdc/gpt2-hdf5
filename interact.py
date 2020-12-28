@@ -26,6 +26,7 @@ import fire
 import numpy as np
 import tensorflow as tf
 
+sys.path.insert(1, '/content/gpt-2/src')
 import cleaner
 import encoder
 import model
