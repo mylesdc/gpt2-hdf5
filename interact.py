@@ -71,6 +71,11 @@ MODELS_DIR = "models"
 # Path to the saved MODEL info
 CHECKPOINT = "checkpoint/run1/model-7728.hdf5"
 
+TRUNCATE = False
+
+SPLIT_CONTEXT = 0.5
+INCLUDE_PREFIX=True
+
 
 def main():
     """Run the MODEL interactively."""
@@ -126,8 +131,12 @@ def main():
             # custom for full length text
             total_tokens = len(context_tokens[0])
             generated_once = False
+            gen_texts = []
+            answers = ""
+            split_length = int(1023 * SPLIT_CONTEXT)
 
             for _ in range(NSAMPLES // BATCH_SIZE):
+                gen_text = [np.array([])] * BATCH_SIZE
                 truncated = [False] * BATCH_SIZE
                 while False in truncated:
                     num_tokens = 1023 - (len(context_tokens[0]))
@@ -151,20 +160,21 @@ def main():
                         out = sess.run(output, feed_dict={
                             context: context_tokens
                         })
+
                     total_tokens += num_tokens
                     for i in range(BATCH_SIZE):
                         text = out[i]
                         trunc_text = ""
                         if prefix:
                             text = np.append(context_tokens[i][:1], text)
-                        if truncate or all(gen_text):
+                        if TRUNCATE or all(gen_text):
                             context_tokens[i] = out[i][(1023 - split_length - 1):]
                             if generated_once:
                                 text = out[i][split_length:]
 
-                            if truncate:
+                            if TRUNCATE:
                                 to_trunc = enc.decode(text)
-                                truncate_esc = re.escape(truncate)
+                                truncate_esc = re.escape(TRUNCATE)
                                 if prefix and not include_prefix:
                                     prefix_esc = re.escape(prefix)
                                     pattern = '(?:{})(.*?)(?:{})'.format(prefix_esc,
@@ -181,11 +191,13 @@ def main():
                             gen_text[i] = np.concatenate((gen_text[i], text), axis=None)
                             if trunc_text or (length is not None and total_tokens >= length-1):
                                 truncated[i] = True
-                                gen = enc.decode(gen_text[i]).lstrip('\n')
+                                answers += enc.decode(gen_text[i]).lstrip('\n')
+                                '''
                                 if destination_path:
                                     f.write("{}\n{}".format(gen, sample_delim))
                                 if not return_as_list and not destination_path:
                                     print("{}\n{}".format(gen, sample_delim), end='')
+                                '''
                                 gen_texts.append(gen)
                     generated_once = True
 
