@@ -198,7 +198,7 @@ def main():
                                 if not return_as_list and not destination_path:
                                     print("{}\n{}".format(gen, sample_delim), end='')
                                 '''
-                                gen_texts.append(gen)
+                                gen_texts.append(answers)
                     generated_once = True
 
                 answers = ""
