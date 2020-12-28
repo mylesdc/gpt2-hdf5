@@ -141,11 +141,11 @@ def main():
                     " ".join(cleaner.clean_text(answers))
                 )
 
-                #final_answers = cleaner.chunk_into_sentences(clean_answers)
+                final_answers = cleaner.chunk_into_sentences(clean_answers)
 
                 try:
                     #print(similarity.use_filter(question, answers, 5))
-                    print(clean_answers)
+                    print(final_answers)
 
                 except Exception:
                     print(" ".join(answers))
