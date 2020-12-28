@@ -75,6 +75,7 @@ TRUNCATE = False
 
 SPLIT_CONTEXT = 0.5
 INCLUDE_PREFIX=True
+TOP_P = 0.6
 
 
 def main():
@@ -151,7 +152,7 @@ def main():
                                 start_token=enc.encoder['<|endoftext|>'] if not question else None,
                                 context=context if question else None,
                                 batch_size=BATCH_SIZE,
-                                temperature=temperature, top_k=top_k, top_p=top_p
+                                temperature=TEMPERATURE, top_k=TOP_K, top_p=TOP_P
                             )[:, 1:]
                         out = sess.run(split_output, feed_dict={
                             context: context_tokens
