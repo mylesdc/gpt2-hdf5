@@ -140,7 +140,7 @@ def main():
                                 length=new_split_output_length,
                                 start_token=enc.encoder['<|endoftext|>'] if not prefix else None,
                                 context=context if prefix else None,
-                                batch_size=batch_size,
+                                batch_size=BATCH_SIZE,
                                 temperature=temperature, top_k=top_k, top_p=top_p
                             )[:, 1:]
                         out = sess.run(split_output, feed_dict={
@@ -151,6 +151,43 @@ def main():
                         out = sess.run(output, feed_dict={
                             context: context_tokens
                         })
+                    total_tokens += num_tokens
+                    for i in range(BATCH_SIZE):
+                        text = out[i]
+                        trunc_text = ""
+                        if prefix:
+                            text = np.append(context_tokens[i][:1], text)
+                        if truncate or all(gen_text):
+                            context_tokens[i] = out[i][(1023 - split_length - 1):]
+                            if generated_once:
+                                text = out[i][split_length:]
+
+                            if truncate:
+                                to_trunc = enc.decode(text)
+                                truncate_esc = re.escape(truncate)
+                                if prefix and not include_prefix:
+                                    prefix_esc = re.escape(prefix)
+                                    pattern = '(?:{})(.*?)(?:{})'.format(prefix_esc,
+                                                                         truncate_esc)
+                                else:
+                                    pattern = '(.*?)(?:{})'.format(truncate_esc)
+
+                                trunc_text = re.search(pattern, to_trunc, re.S)
+                                if trunc_text:
+                                    text = enc.encode(trunc_text.group(1))
+                                    # better to re-encode here then decode every generation cycle, I think
+
+                        if not truncated[i]:
+                            gen_text[i] = np.concatenate((gen_text[i], text), axis=None)
+                            if trunc_text or (length is not None and total_tokens >= length-1):
+                                truncated[i] = True
+                                gen = enc.decode(gen_text[i]).lstrip('\n')
+                                if destination_path:
+                                    f.write("{}\n{}".format(gen, sample_delim))
+                                if not return_as_list and not destination_path:
+                                    print("{}\n{}".format(gen, sample_delim), end='')
+                                gen_texts.append(gen)
+                    generated_once = True
 
                 answers = ""
                 for idx in range(BATCH_SIZE):
