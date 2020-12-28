@@ -129,7 +129,7 @@ def main():
 
             for _ in range(NSAMPLES // BATCH_SIZE):
                 truncated = False
-                while False in truncated:
+                while truncated is False:
                     num_tokens = 1023 - (len(context_tokens))
 
                     if generated_once:
