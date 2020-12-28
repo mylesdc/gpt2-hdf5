@@ -147,8 +147,8 @@ def main():
                             split_output = sample.sample_sequence(
                                 hparams=hparams,
                                 length=new_split_output_length,
-                                start_token=enc.encoder['<|endoftext|>'] if not prefix else None,
-                                context=context if prefix else None,
+                                start_token=enc.encoder['<|endoftext|>'] if not question else None,
+                                context=context if question else None,
                                 batch_size=BATCH_SIZE,
                                 temperature=temperature, top_k=top_k, top_p=top_p
                             )[:, 1:]
@@ -165,7 +165,7 @@ def main():
                     for i in range(BATCH_SIZE):
                         text = out[i]
                         trunc_text = ""
-                        if prefix:
+                        if question:
                             text = np.append(context_tokens[i][:1], text)
                         if TRUNCATE or all(gen_text):
                             context_tokens[i] = out[i][(1023 - split_length - 1):]
@@ -175,8 +175,8 @@ def main():
                             if TRUNCATE:
                                 to_trunc = enc.decode(text)
                                 truncate_esc = re.escape(TRUNCATE)
-                                if prefix and not include_prefix:
-                                    prefix_esc = re.escape(prefix)
+                                if question and not include_prefix:
+                                    prefix_esc = re.escape(question)
                                     pattern = '(?:{})(.*?)(?:{})'.format(prefix_esc,
                                                                          truncate_esc)
                                 else:
