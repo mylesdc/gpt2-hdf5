@@ -121,16 +121,16 @@ def main():
                 print("Prompt should not be empty!")
                 question = input("COVID-19 CHATBOT> ")
 
-            context_tokens = enc.encode(question)
+            context_tokens = [enc.encode(question)] * BATCH_SIZE
 
             # custom for full length text
-            total_tokens = len(context_tokens)
+            total_tokens = len(context_tokens[0])
             generated_once = False
 
             for _ in range(NSAMPLES // BATCH_SIZE):
-                truncated = False
-                while truncated is False:
-                    num_tokens = 1023 - (len(context_tokens))
+                truncated = [False] * batch_size
+                while False in truncated:
+                    num_tokens = 1023 - (len(context_tokens[0]))
 
                     if generated_once:
                         new_split_output_length = min(length - total_tokens, 1023 - split_length)
