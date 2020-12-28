@@ -145,7 +145,7 @@ def main():
 
                 try:
                     #print(similarity.use_filter(question, answers, 5))
-                    print(final_answers)
+                    print(answers)
 
                 except Exception:
                     print(" ".join(answers))
