@@ -20,14 +20,12 @@ Description:
 import json
 import os
 import re
-import sys
 
 import fire
 
 import numpy as np
 import tensorflow as tf
 
-sys.path.insert(1, '/content/gpt-2/src')
 import cleaner
 import encoder
 import model
@@ -145,7 +143,7 @@ def main():
 
                 try:
                     #print(similarity.use_filter(question, answers, 5))
-                    print(answers)
+                    print(clean_answers)
 
                 except Exception:
                     print(" ".join(answers))
