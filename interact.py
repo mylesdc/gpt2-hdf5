@@ -193,14 +193,14 @@ def main():
                             gen_text[i] = np.concatenate((gen_text[i], text), axis=None)
                             if trunc_text or (length is not None and total_tokens >= length-1):
                                 truncated[i] = True
-                                answers += enc.decode(gen_text[i]).lstrip('\n')
+                                gen += enc.decode(gen_text[i]).lstrip('\n')
                                 '''
                                 if destination_path:
                                     f.write("{}\n{}".format(gen, sample_delim))
                                 if not return_as_list and not destination_path:
                                     print("{}\n{}".format(gen, sample_delim), end='')
                                 '''
-                                gen_texts.append(answers)
+                                answers += gen
                     generated_once = True
 
                 answers = ""
