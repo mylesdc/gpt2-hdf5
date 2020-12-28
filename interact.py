@@ -124,7 +124,7 @@ def main():
             context_tokens = enc.encode(question)
 
             # custom for full length text
-            total_tokens = len(context_tokens[0])
+            total_tokens = len(context_tokens)
             generated_once = False
 
             for _ in range(NSAMPLES // BATCH_SIZE):
