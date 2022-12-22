@@ -169,3 +169,6 @@ tags
 
 # End of https://www.gitignore.io/api/vim,cuda,macos,python
 
+p36_gpt
+p38_gpt
+models

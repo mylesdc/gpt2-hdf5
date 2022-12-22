@@ -8,3 +8,4 @@ scikit-learn==0.22.2.post1
 tensorflow-gpu==1.14
 tensorflow-hub==0.7.0
 toposort==1.5
+keras==2.3

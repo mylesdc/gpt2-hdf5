@@ -27,7 +27,7 @@ import fire
 import numpy as np
 import tensorflow as tf
 
-sys.path.insert(1, '/content/gpt-2/src')
+sys.path.insert(1, 'src')
 import cleaner
 import encoder
 import model
@@ -37,7 +37,7 @@ import tflex
 
 
 # String, which MODEL to use
-MODEL_NAME = "1558M"
+MODEL_NAME = "vapebros"
 
 # Integer seed for random number generators, fix seed to reproduce results
 SEED = None
@@ -69,7 +69,7 @@ TOP_K = 40
 MODELS_DIR = "models"
 
 # Path to the saved MODEL info
-CHECKPOINT = "checkpoint/run1/model-7728.hdf5"
+CHECKPOINT = "models/vapebros/model-77.hdf5"
 
 TRUNCATE = False
 
